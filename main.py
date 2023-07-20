@@ -3,7 +3,7 @@ import time
 import csv
 
 
-def find_anime( mood , nerve_stat ) :
+def find_anime( mood , nerve_stat , anime_list ) :
     matchs = []
     for i in range (len(anime_list)) :
         if mood == 2 :
@@ -16,12 +16,30 @@ def find_anime( mood , nerve_stat ) :
                 continue
         else :
             continue
-    random_num = random.randint(0,len(matchs))
+    if not matchs :
+        return 0;
+    random_num = random.randint(0,len(matchs)-1)
     for i in range (len(anime_list)) :
         if anime_list[i][0] == matchs[random_num] :
-            return i
+            return i+1
         else :
             continue
+    return 0
+
+def recommend_anime (mood , nerve_stat , anime_list) :
+        anime_code = find_anime(mood,nerve_stat,anime_list)
+        if anime_code == 0 :
+            print('Sorry, no more anime\'s like that for you, but i will soon add more so stay tuned please! <3')
+            return 0
+        else :
+            anime_code-=1
+            print('Here you go, i found this for you, I hope that You would like this and enjoy it!')
+            print('Name: ' , anime_list[anime_code][0])
+            print('Episode count: ' , anime_list[anime_code][1])
+            #print('Link to download: ' , anime_list[anime_code][4])
+            print('Thanks for using me! <3')
+            del anime_list[anime_code]
+            input('Press Enter to get another suggestion!')
 
 with open('anime_list.csv',newline='') as data :
     reader = csv.reader(data)
@@ -30,23 +48,12 @@ with open('anime_list.csv',newline='') as data :
 while(1) :
     mood =  int(input('What\'s the mood that you are looking for right now ? \n1] happy\n2] Idk\n3] sad\nplease type the number only, I\'m poorly programmed and I can\'t understand anything else. :"( \n' ))
     if mood in range(1,4,1) :
-        nerve_stat = int(input('which one of these describes what you want more ?\n1) something without any stress, something relaxing to watch, something that doesn\'t have an engaging story so that if I flop it, I wouldn\'t feel bad.\n2) something with a intersting plot but yet without any tension and stress.\n3) something with a good plot and a little engaging story.\n4) something that can give me goose bumps but I wouldn\'t think about it a lot.\n5) give me something to distract my mind from my life and make it to focus on it, something that can make me cry or laugh. something that I would never forget.\nplease don\'t forget that I\'m the same poorly program as before!\n'))
+        nerve_stat = int(input('which one of these describes what you want more ?\n1) something without any stress, something relaxing to watch, something that doesn\'t have an engaging story so that if I flop it, I wouldn\'t feel bad.\n2) something with a intersting plot but yet without any tension and stress.\n3) something with a good plot and a little engaging story.\n4) something that can give me goose bumps but I wouldn\'t think about it a lot.\n5) give me something to distract my mind from my life and make it to focus on it, something that can make me cry or laugh. something that I would never forget.\nplease don\'t forget that I\'m the same poorly programmed program as before!\n'))
         if nerve_stat in range(1,6) :
-            anime_code = find_anime(mood,nerve_stat)
-            print('Here you go, i found this for you, I hope that You would like this and enjoy it!')
-            print('Name: ' , anime_list[anime_code][0])
-            print('Episode count: ' , anime_list[anime_code][1])
-            #print('Link to download: ' , anime_list[anime_code][4])
-            print('Thanks for using me! <3')
+            recommend_anime(mood , nerve_stat , anime_list)
         else :
             print("OK I totally get it, your brain is filled with other stuff. All you need is something relaxing, something that doesn\'t add anything to your troubles!")
             nerve_stat = 1
-            anime_code = find_anime(mood,nerve_stat)
-            print('Here you go, i found this for you, I hope that You would like this and enjoy it!')
-            print('Name: ' , anime_list[anime_code][0])
-            print('Episode count: ' , anime_list[anime_code][1])
-            #print('Link to download: ' , anime_list[anime_code][4])
-            print('Thanks for using me! <3')
-        time.sleep(10)
+            recommend_anime(mood , nerve_stat , anime_list)
     else :  print("I told you that I\'m poorly programmed, so please say something that even I understand!")    ;   time.sleep(2)   ;   pass
 
